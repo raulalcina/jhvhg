@@ -1,0 +1,119 @@
+<!-- 
+ Programa: Movimento do quadradado
+ Nome: Gabriel Santos Pirez n°12 Turma:2L
+ Nome: Miguel Reny Arduini Martir n°19 Turma: 2L
+ Nome: Nicollas Augusto dos Santos Silva n°21 Turma: 2L
+ Nome: Raul Dias de Oliveira n°23 Turma: 2L
+ Nome: Rennan Proença Jung Dias de Oliveira n°24 Turma:2L
+-->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movimento do Quadrado</title>
+    <style>
+        body {
+            background-color: black; /* Fundo branco para a página */
+            color: black;
+        }
+        canvas {
+            border: 1px solid black;
+            background-color: white; /* Fundo branco para o canvas */
+        }
+        button {
+            margin: 5px;
+        }
+        h1{
+            color: white;
+            font-family:Arial;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pressione Iniciar antes de mexer o quadrado</h1>
+    <canvas id="myCanvas" width="400" height="400"></canvas>
+    <br>
+    <button id="up">Cima</button>
+    <button id="down">Baixo</button>
+    <button id="left">Esquerda</button>
+    <button id="right">Direita</button>
+    <button id="start">Iniciar</button>
+    <button id="stop">Parar</button>
+
+    <script>
+        const canvas = document.getElementById('myCanvas');
+        const ctx = canvas.getContext('2d');
+        let x = 200, y = 200;
+        let dx = 0, dy = 0;
+        let isMoving = false;
+        let isStarted = false; // Para controlar o estado de "Iniciar" e "Parar"
+
+        // Desenha o componente e preenche o fundo do canvas com branco
+        function drawComponent() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'white'; // Preenche o fundo do canvas com branco
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'blue'; // Preenche o quadrado com azul
+            ctx.fillRect(x, y, 50, 50);
+        }
+
+        function startMoving() {
+            if (!isStarted) return; // Apenas move se o botão de "Iniciar" tiver sido pressionado
+            isMoving = true;
+            moveComponent();
+        }
+
+        function stopMoving() {
+            isMoving = false;
+            dx = 0;
+            dy = 0;
+        }
+
+        // Função que move o componente
+        function moveComponent() {
+            if (isMoving) {
+                x += dx;
+                y += dy;
+
+                // Impede que o quadrado saia do canvas
+                if (x < 0) x = 0;
+                if (y < 0) y = 0;
+                if (x + 50 > canvas.width) x = canvas.width - 50;
+                if (y + 50 > canvas.height) y = canvas.height - 50;
+
+                drawComponent();
+                requestAnimationFrame(moveComponent);
+            }
+        }
+
+        // Configura os controles de direção
+        document.getElementById('up').onmousedown = () => { if (isStarted) { dx = 0; dy = -2; startMoving(); } };
+        document.getElementById('down').onmousedown = () => { if (isStarted) { dx = 0; dy = 2; startMoving(); } };
+        document.getElementById('left').onmousedown = () => { if (isStarted) { dx = -2; dy = 0; startMoving(); } };
+        document.getElementById('right').onmousedown = () => { if (isStarted) { dx = 2; dy = 0; startMoving(); } };
+
+        // Para o movimento ao soltar o botão
+        document.getElementById('up').onmouseup = stopMoving;
+        document.getElementById('down').onmouseup = stopMoving;
+        document.getElementById('left').onmouseup = stopMoving;
+        document.getElementById('right').onmouseup = stopMoving;
+
+        // Controle do botão "Iniciar"
+        document.getElementById('start').onclick = () => {
+            isStarted = true;
+            isMoving = true;
+            moveComponent();
+        };
+
+        // Controle do botão "Parar"
+        document.getElementById('stop').onclick = () => {
+            isStarted = false;
+            isMoving = false;
+            stopMoving();
+        };
+
+        drawComponent(); // Desenha o componente inicialmente
+    </script>
+</body>
+</html>
